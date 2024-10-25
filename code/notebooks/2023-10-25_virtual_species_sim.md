@@ -46,4 +46,4 @@ my.first.species = generateSpFromFun(raster.stack = stackf,
 
      - The final environmental suitability was rescaled between 0 and 1. To disable, set argument rescale = FALSE
 
-![](2023-10-25_virtual_species_sim_files/figure-commonmark/unnamed-chunk-2-1.png)
+![](figures/2023-10-25_virtual_species_sim/unnamed-chunk-2-1.png)
