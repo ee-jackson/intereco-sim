@@ -29,26 +29,47 @@ library(sf)
 library(raster)
 library(ggplot2)
 library(viridis)
+library(elevatr)
 ```
 
 ```{r}
 # Define the bounding box coordinates for Triglav National Park
 # (approximate lat/lon boundaries: 46.3005, 13.6705, 46.4505, 13.8505)
-bbox_points <- data.frame(
+bbox_points <- 
+  data.frame(
   lon = c(13.6705, 13.8505, 13.6705, 13.8505),
   lat = c(46.3005, 46.3005, 46.4505, 46.4505)
 )
+```
 
+```{r}
 # Convert points to sf object
-points_sf <- sf::st_as_sf(bbox_points, coords = c("lon", "lat"), crs = 4326)
+points_sf <- 
+  sf::st_as_sf(bbox_points, coords = c("lon", "lat"), crs = 4326)
+```
 
+```{r}
 # Convert bounding box to an sf polygon
 pol <-
-sf::st_as_sfc(sf::st_bbox(c(xmin = 13.6705, ymin = 46.3005, xmax = 13.8505, ymax = 46.4505), crs = sf::st_crs(4326)))
-pol
+  sf::st_as_sfc(sf::st_bbox(c(
+    xmin = 13.6705, 
+    ymin = 46.3005, 
+    xmax = 13.8505, 
+    ymax = 46.4505), 
+    crs = sf::st_crs(4326)))
 
-elevation_data <- elevatr::get_elev_raster(locations = sf::st_as_sf(pol), z = 9, clip = "locations")
-elevation_data
+pol
+```
+
+```{r}
+elevation_data <- 
+  elevatr::get_elev_raster(locations = sf::st_as_sf(pol), 
+                           z = 9, clip = "locations")
+
+glimpse(elevation_data)
+```
+
+```{r}
 plot(elevation_data)
 
 #writeRaster(elevation_data, filename=file.path(tmp, "triglav.elev.tif"), format="GTiff", overwrite=TRUE)
