@@ -1,0 +1,56 @@
+---
+title: "Get environment vars"
+author: 'Becks'
+date: '`r format(Sys.time(), "%d %B, %Y")`' 
+format: gfm+emoji
+editor: source
+execute:
+  warning: false
+---
+
+```{r setup}
+#| include: false
+
+file_name <- knitr::current_input()
+
+knitr::opts_chunk$set(
+  fig.path =
+    paste0("figures/", sub("\\.rmarkdown$", "", basename(file_name)), "/", sep = "")
+)
+
+ggplot2::theme_set(ggplot2::theme_classic(base_size = 10))
+```
+
+```{r packages}
+#| output: false
+
+library(rgeoboundaries)
+library(sf)
+library(raster)
+library(ggplot2)
+library(viridis)
+```
+
+```{r}
+# Define the bounding box coordinates for Triglav National Park
+# (approximate lat/lon boundaries: 46.3005, 13.6705, 46.4505, 13.8505)
+bbox_points <- data.frame(
+  lon = c(13.6705, 13.8505, 13.6705, 13.8505),
+  lat = c(46.3005, 46.3005, 46.4505, 46.4505)
+)
+
+# Convert points to sf object
+points_sf <- sf::st_as_sf(bbox_points, coords = c("lon", "lat"), crs = 4326)
+
+# Convert bounding box to an sf polygon
+pol <-
+sf::st_as_sfc(sf::st_bbox(c(xmin = 13.6705, ymin = 46.3005, xmax = 13.8505, ymax = 46.4505), crs = sf::st_crs(4326)))
+pol
+
+elevation_data <- elevatr::get_elev_raster(locations = sf::st_as_sf(pol), z = 9, clip = "locations")
+elevation_data
+plot(elevation_data)
+
+#writeRaster(elevation_data, filename=file.path(tmp, "triglav.elev.tif"), format="GTiff", overwrite=TRUE)
+```
+
