@@ -1,28 +1,11 @@
----
-title: "simulation"
-author: 'Luke'
-format: gfm+emoji
-editor: visual
----
-
-```{r setup}
-#| include: false
-
-file_name <- knitr::current_input()
-
-knitr::opts_chunk$set(
-  fig.path =
-    paste0("figures/", sub("\\.rmarkdown$", "", basename(file_name)), "/", sep = "")
-)
-
-ggplot2::theme_set(ggplot2::theme_classic(base_size = 10))
-```
+# simulation
+Luke
 
 ## Simulation
 
 Load packages
 
-```{r,package-load,message=FALSE,warning=FALSE}
+``` r
 library(tidyverse)
 library(raster)
 library(virtualspecies)
@@ -30,8 +13,7 @@ library(virtualspecies)
 
 generate random rasters
 
-```{r}
-
+``` r
 f1 = raster(ncol=50, nrow=50, xmn=0, xmx=50, ymn=0, ymx=50)
 f2 = raster(ncol=50, nrow=50, xmn=0, xmx=50, ymn=0, ymx=50)
 
@@ -44,9 +26,13 @@ stackf = stack(f1,f2)
 plot(f1);plot(f2)
 ```
 
+![](figures/2023-10-25_sim_example/unnamed-chunk-1-1.png)
+
+![](figures/2023-10-25_sim_example/unnamed-chunk-1-2.png)
+
 Write functions
 
-```{r}
+``` r
 inv_logit = function(x) exp(x)/ (1+exp(x))
 
 #Occurencepred = function(x, y, alpha, beta1, beta2, beta12) {
@@ -65,6 +51,6 @@ Occurencepred2 <- function(x, y, alpha, beta1, beta2, beta12) {
 ypred = overlay(x=stackf[[1]],y=stackf[[2]] ,fun = Occurencepred2(alpha=0.1,beta1=0.5,beta2=0.3,beta12=1))
 
 plot(ypred)
-
-
 ```
+
+![](figures/2023-10-25_sim_example/unnamed-chunk-2-1.png)
